@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
         randomNumber.toString(),
     };
     const userName = {
-      userName: (await users.firstName) + (await users.lastName),
+      userName: (await users.firstName) + " " + (await users.lastName),
     };
     await User.findOneAndUpdate({ email: req.body.email }, tokens, {
       new: true,

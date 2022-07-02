@@ -60,14 +60,28 @@ router.post("/", async (req, res) => {
   }
   if (req.body.searchValue) {
     try {
-      const result = await User.find({
-        nameKey: { $regex: "^" + req.body.searchValue, $options: "i" },
+      const userNameresult = await User.find({
+        userName: { $regex: "^" + req.body.searchValue, $options: "i" },
       })
         .sort({ follower: 1 })
         .limit(20);
-      return res
-        .status(200)
-        .send({ message: "Search User Successfully", searchResult: result });
+      if (userNameresult.length > 0) {
+        return res
+          .status(200)
+          .send({ message: "Search User Successfully", searchResult: result });
+      } else {
+        const nameKeyresult = await User.find({
+          nameKey: { $regex: "^" + req.body.searchValue, $options: "i" },
+        })
+          .sort({ follower: 1 })
+          .limit(20);
+        return res
+          .status(200)
+          .send({
+            message: "Search User Successfully",
+            searchResult: nameKeyresult,
+          });
+      }
     } catch (error) {
       if (error) console.log(error);
       return res.status(500).send({ message: "Internal Server Error" });

@@ -68,19 +68,21 @@ router.post("/", async (req, res) => {
       if (userNameresult.length > 0) {
         return res
           .status(200)
-          .send({ message: "Search User Successfully", searchResult: result });
+          .send({
+            message: "Search User Successfully",
+            searchResult: userNameresult,
+          });
       } else {
         const nameKeyresult = await User.find({
           nameKey: { $regex: "^" + req.body.searchValue, $options: "i" },
         })
           .sort({ follower: 1 })
           .limit(20);
-        return res
-          .status(200)
-          .send({
-            message: "Search User Successfully",
-            searchResult: nameKeyresult,
-          });
+
+        return res.status(200).send({
+          message: "Search User Successfully",
+          searchResult: nameKeyresult,
+        });
       }
     } catch (error) {
       if (error) console.log(error);

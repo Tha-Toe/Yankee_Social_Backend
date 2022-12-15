@@ -13,6 +13,7 @@ const { Post } = require("../models/model");
 //   },
 // });
 // let upload = multer({ storage: storage });
+// , upload.single("post_pic")
 router.post("/", async (req, res) => {
   try {
     let rawPostSchema = {};

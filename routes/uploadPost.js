@@ -4,16 +4,16 @@ const fs = require("fs");
 const sharp = require("sharp");
 const { Post } = require("../models/model");
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
-  },
-});
-let upload = multer({ storage: storage });
-router.post("/", upload.single("post_pic"), async (req, res) => {
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + "-" + Date.now());
+//   },
+// });
+// let upload = multer({ storage: storage });
+router.post("/", async (req, res) => {
   try {
     let rawPostSchema = {};
 

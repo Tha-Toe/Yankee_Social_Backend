@@ -1,37 +1,23 @@
 const router = require("express").Router();
 const { User } = require("../models/model");
-const multer = require("multer");
 const fs = require("fs");
 const sharp = require("sharp");
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
-  },
-});
-
-let upload = multer({ storage: storage });
-
-router.post("/", upload.single("cover_photo"), async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    let image = req.file.path;
+    let image = req.files.cover_photo;
     if (
-      !req.file.mimetype.includes("jpeg") &&
-      !req.file.mimetype.includes("png") &&
-      !req.file.mimetype.includes("jpg")
+      !image.mimetype.includes("jpeg") &&
+      !image.mimetype.includes("png") &&
+      !image.mimetype.includes("jpg")
     ) {
-      fs.unlinkSync(image);
       return res.status(400).send({ message: "File not support" });
     }
-    var img = fs.readFileSync(req.file.path);
-    var encode_img = img.toString("base64");
-
-    var bufferRawImage = new Buffer(encode_img, "base64");
+    var imgData = image.data;
+    console.log(imgData);
+    var encode_img = imgData.toString("base64");
+    var bufferRawImage = Buffer.from(encode_img, "base64");
     var resizedImageBase64;
-
     await sharp(bufferRawImage)
       .resize(300, 60)
       .toBuffer()
@@ -44,10 +30,11 @@ router.post("/", upload.single("cover_photo"), async (req, res) => {
       });
 
     var final_img = {
-      contentType: req.file.mimetype,
-      data: new Buffer(resizedImageBase64, "base64"),
+      contentType: image.mimetype,
+      data: Buffer.from(resizedImageBase64, "base64"),
     };
     const coverPhoto = { coverPhoto: final_img };
+
     await User.findOneAndUpdate({ email: req.body.email }, coverPhoto, {
       new: true,
       runValidators: true,

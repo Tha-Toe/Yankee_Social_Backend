@@ -2,6 +2,7 @@ const router = require("express").Router();
 // const multer = require("multer");
 const fs = require("fs");
 const sharp = require("sharp");
+const { Post } = require("../models/model");
 
 // var storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -81,7 +82,7 @@ router.post("/", async (req, res) => {
       var imgData = image.data;
       console.log(imgData);
       var encode_img = imgData.toString("base64");
-      var bufferRawImage = new Buffer(encode_img, "base64");
+      var bufferRawImage = Buffer.from(encode_img, "base64");
       var resizedImageBase64;
       await sharp(bufferRawImage)
         .resize({ width: 500 })
@@ -96,13 +97,13 @@ router.post("/", async (req, res) => {
 
       rawPostSchema.postImage = {
         contentType: image.mimetype,
-        data: new Buffer(resizedImageBase64, "base64"),
+        data: Buffer.from(resizedImageBase64, "base64"),
       };
     }
 
     //like
 
-    // await new Post(rawPostSchema).save();
+    await new Post(rawPostSchema).save();
     console.log("post uploaded");
     return res.status(200).send({ message: "Success Upload" });
   } catch (error) {

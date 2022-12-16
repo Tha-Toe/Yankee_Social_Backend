@@ -17,9 +17,11 @@ const deletePost = require("./routes/deletePost");
 const likePost = require("./routes/likePost");
 const uploadComment = require("./routes/uploadComment");
 const deleteComment = require("./routes/deletecomment");
+var fileupload = require("express-fileupload");
 
 app.use(cors());
 app.use(express.json());
+app.use(fileupload());
 connectDB();
 
 app.use("/api/signup", signUpRoute);

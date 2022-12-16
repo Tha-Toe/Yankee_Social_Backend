@@ -7,9 +7,9 @@ router.post("/", async (req, res) => {
     //console.log(email);
     if (!email) return res.status(400).send({ message: "Email is undefined" });
     const user = await User.findOne({ email: email });
+    res.set("Access-Control-Allow-Origin", "*");
     res
       .status(200)
-      .header("Access-Control-Allow-Origin", "*")
       .send({ userData: user, message: "Get User Data Successfully" });
   } catch (error) {
     if (error)

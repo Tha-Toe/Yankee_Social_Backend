@@ -9,6 +9,7 @@ router.post("/", async (req, res) => {
     const user = await User.findOne({ email: email });
     res
       .status(200)
+      .header("Access-Control-Allow-Origin", "*")
       .send({ userData: user, message: "Get User Data Successfully" });
   } catch (error) {
     if (error)

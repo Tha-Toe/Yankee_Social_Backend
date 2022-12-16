@@ -67,6 +67,7 @@ router.post("/", upload.single("post_pic"), async (req, res) => {
     //like
 
     await new Post(rawPostSchema).save();
+    console.log("post uploaded");
     return res.status(200).send({ message: "Success Upload" });
   } catch (error) {
     return res.status(500).send({ message: "Server Internal Error" });

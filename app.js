@@ -19,7 +19,11 @@ const uploadComment = require("./routes/uploadComment");
 const deleteComment = require("./routes/deletecomment");
 var fileupload = require("express-fileupload");
 
-app.use(cors());
+var corsOptions = {
+  origin: ["http://localhost:3000", "https://yankee.vercel.app"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(fileupload());
 connectDB();
